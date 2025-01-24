@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+<ros2_control name="GazeboSimRobot" type="system">
+        <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        <!-- add the hardware interface of the robot here, for now we are interfacing it with gazebo -->
+    </hardware>
+
+    <joint name="base_left_front_wheel_joint">
+    <command_interface name = "velocity">
+        <param name="min" value="-1.0"/>
+        <param name="max" value="1.0"/>        
+    </command_interface>    
+
+        <state_interface name="velocity"/>
+        <state_interface name="position"/>
+    </joint>
+
+    <joint name="base_right_front_wheel_joint">
+    <command_interface name = "velocity">
+        <param name="min" value="-1.0"/>
+        <param name="max" value="1.0"/>        
+    </command_interface>   
+    
+        <state_interface name="velocity"/>
+        <state_interface name="position"/>
+    </joint>
+
+    <joint name="base_left_back_wheel_joint">
+    <command_interface name = "velocity">
+        <param name="min" value="-1.0"/>
+        <param name="max" value="1.0"/>        
+    </command_interface>    
+
+        <state_interface name="velocity"/>
+        <state_interface name="position"/>
+    </joint>
+
+    <joint name="base_right_back_wheel_joint">
+    <command_interface name = "velocity">
+        <param name="min" value="-1.0"/>
+        <param name="max" value="1.0"/>        
+    </command_interface>   
+    
+        <state_interface name="velocity"/>
+        <state_interface name="position"/>
+    </joint>
+
+</ros2_control>
+
+    <gazebo>
+    <!-- <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin"> -->
+        <!-- <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system"> -->
+            
+        <plugin name = "gz_ros2_control::GazeboSimROS2ControlPlugin" filename = "libgz_ros2_control-system">
+            <parameters>$(find antr_description)/config/controller_config.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+</robot>

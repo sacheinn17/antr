@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="base_length" value="0.312" />
+    <xacro:property name="base_width" value="0.2115" />
+    <xacro:property name="base_height" value="0.002" />
+    <xacro:property name="wheel_radius" value="0.0325" />
+    <xacro:property name="wheel_length" value="0.025" />
+
+    <link name="base_footprint" />
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}" />
+            </geometry>
+            <origin xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+            <material name="green" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${base_length} ${base_width} ${base_height}" />
+            </geometry>
+            <origin xyz="0 0 ${base_height / 2.0}" rpy="0 0 0" />
+        </collision>
+        <xacro:box_inertia m="2.5" x="${base_length}" y="${base_width}" z="${base_height}" 
+                           o_xyz="0 0 ${base_height / 2.0}" o_rpy="0 0 0" />
+    </link>
+
+    <xacro:wheel_link prefix="right_back" />
+    <xacro:wheel_link prefix="left_back" />
+    <xacro:wheel_link prefix="right_front" />
+    <xacro:wheel_link prefix="left_front" />
+
+    <link name="camera_link_2">
+        <xacro:camera width="640" height="480" hfov="1.3962634" color="black" />
+    </link>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" />
+    </joint>
+
+    <xacro:wheel_joint child_prefix = "left_back" xyz = "${(-base_length / 2.0)+0.012} ${-(base_width + wheel_length) / 2.0 - 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "right_back" xyz = "${(-base_length / 2.0)+0.012} ${(base_width + wheel_length) / 2.0 + 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "left_front" xyz = "${(base_length / 2.0)-0.012} ${-(base_width + wheel_length) / 2.0 - 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "right_front" xyz = "${(base_length / 2.0)-0.012} ${(base_width + wheel_length) / 2.0 + 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+
+    <joint name="base_camera_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="camera_link_2"/>
+        <origin xyz="${base_length/2 - 0.050} 0.0 ${base_height+0.015}" rpy="0.0 0.0 0.0"/>
+        <!-- <limit lower="0.0" upper="180.0" effort="0.0" velocity="1.0"/> -->
+    </joint>
+
+
+
+
+</robot>
