@@ -39,13 +39,14 @@ def quaternion_from_euler(ai, aj, ak):
     return q
 
 def detect_green_box(image):
-
+    image = cv2.flip(image,1)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, (36, 25, 25), (70, 255,255))
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     x = 0
     y = 0
+
     for contour in contours:
 
         if cv2.contourArea(contour) < 500:
@@ -86,9 +87,12 @@ class robot_localize(Node):
             durability=QoSDurabilityPolicy.TRANSIENT_LOCAL
         ))
         self.map_resolution = 0.0027  # Map resolution in meters/pixel
+
         self.map_origin = [0.0, 0.0, 0.0]  # Map origin [x, y, theta]
         self.map_width = 480  # Width in pixels
         self.map_height = 640  # Height in pixels
+        self.orientation = 0
+
 
         self.broadcaster = TransformBroadcaster(self)
         self.ballState = self.create_publisher(Bool,"/ballState",10)
@@ -96,7 +100,7 @@ class robot_localize(Node):
     def image_callback_(self,msg:Image):
         bridge = CvBridge()
         image = bridge.imgmsg_to_cv2(msg, "bgr8")
-        
+
         frame,x,y,o_z = detect_green_box(image)
         self.map_height,self.map_width,channels = image.shape  # Height in pixels
         # self.resolution = self.map_height/472
@@ -106,14 +110,16 @@ class robot_localize(Node):
         odom_tf.header.frame_id = "odom"
         odom_tf.child_frame_id = "base_footprint"
         odom_tf.header.stamp = self.get_clock().now().to_msg()
-
+        self.orientation +=  int(90 - o_z)
+        self.orientation %= 360
+        print("ori ",self.orientation)
 
         print(cord)
         odom_tf.transform.translation.x = x/370
         odom_tf.transform.translation.y = y/370
-        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, -math.radians(o_z))
+        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, math.radians(self.orientation))
         self.tf_broad.sendTransform(odom_tf)
-        occupancy_grid = self.create_occupancy_grid(frame)
+        occupancy_grid = self.create_occupancy_grid(image)
         self.map_publisher.publish(occupancy_grid)
 
         cv2.imshow('Received Image', frame)
@@ -123,6 +129,7 @@ class robot_localize(Node):
 
     def create_occupancy_grid(self, image):
         # Convert to HSV and mask red regions
+        image = cv2.flip(image,1)
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         lower_red1 = np.array([0, 70, 50])
         upper_red1 = np.array([0, 255, 255])

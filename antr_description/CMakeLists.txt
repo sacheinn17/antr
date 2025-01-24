@@ -14,7 +14,7 @@ find_package(ament_cmake REQUIRED)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   install(
-    DIRECTORY urdf launch stl config
+    DIRECTORY urdf launch config
     DESTINATION share/${PROJECT_NAME}/
     )
       # the following line skips the linter which checks for copyrights

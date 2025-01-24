@@ -11,7 +11,7 @@ import time
 class TeleopTwistKeyboard(Node):
     def __init__(self):
         super().__init__('Excavator_controler')
-        self.twist_pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.twist_pub = self.create_publisher(Twist, 'cmd_vel_nav', 10)
         self.array_pub = self.create_publisher(Float32MultiArray, 'float_array_mob', 10)
 
         self.speed = 0.8

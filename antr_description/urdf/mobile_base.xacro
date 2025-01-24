@@ -42,10 +42,10 @@
         <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" />
     </joint>
 
-    <xacro:wheel_joint child_prefix = "left_back" xyz = "${(-base_length / 2.0)+0.012} ${-(base_width + wheel_length) / 2.0 - 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
-    <xacro:wheel_joint child_prefix = "right_back" xyz = "${(-base_length / 2.0)+0.012} ${(base_width + wheel_length) / 2.0 + 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
-    <xacro:wheel_joint child_prefix = "left_front" xyz = "${(base_length / 2.0)-0.012} ${-(base_width + wheel_length) / 2.0 - 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
-    <xacro:wheel_joint child_prefix = "right_front" xyz = "${(base_length / 2.0)-0.012} ${(base_width + wheel_length) / 2.0 + 0.002} 0" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "left_back" xyz = "${(-base_length / 2.0)+0.012} ${-(base_width + wheel_length) / 2.0 - wheel_radius/2.0} -0.015" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "right_back" xyz = "${(-base_length / 2.0)+0.012} ${(base_width + wheel_length) / 2.0 + wheel_radius/2.0} -0.015" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "left_front" xyz = "${(base_length / 2.0)-0.012} ${-(base_width + wheel_length) / 2.0 - wheel_radius/2.0} -0.015" xyz_axis = "0 1 0" rpy = "0 0 0"/>
+    <xacro:wheel_joint child_prefix = "right_front" xyz = "${(base_length / 2.0)-0.012} ${(base_width + wheel_length) / 2.0 + wheel_radius/2.0} -0.015" xyz_axis = "0 1 0" rpy = "0 0 0"/>
 
     <joint name="base_camera_joint" type="fixed">
         <parent link="base_link"/>

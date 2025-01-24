@@ -41,7 +41,7 @@ def generate_launch_description():
         parameters=[{"/use_sim_time":True}]
     )
     
-    map_tf =         Node(
+    map_tf = Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             name='odom_to_base_footprint_broadcaster',
@@ -80,9 +80,7 @@ def generate_launch_description():
     )
 
     nav2 = IncludeLaunchDescription(
-
         launch_description_source = os.path.join(get_package_share_path('nav2_bringup'),"bringup_launch.py"),
-
     )
 
     return LaunchDescription([

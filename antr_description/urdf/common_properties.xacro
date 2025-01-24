@@ -82,17 +82,16 @@
                     <sphere radius="${wheel_radius}"/>
                 </geometry>
                 <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
-            <surface>
+            <!-- <surface>
               <friction>
                 <ode>
-                  <mu1>0.5</mu1> <!-- Lateral friction -->
-                  <mu2>0.5</mu2> <!-- Secondary friction -->
-                     <slip1>0.035</slip1> 
-   <slip2>0</slip2> 
+                  <mu1>0.8</mu1> 
+                  <mu2>0.2</mu2>
                 </ode>
               </friction>
-            </surface>
+            </surface> -->
             </collision>
+            <fdir1 value="1 0 0"/>
             <xacro:sphere_inertia m="0.01" r="${wheel_radius}" 
                                     o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0" />
         </link>
