@@ -46,7 +46,6 @@ def detect_green_box(image):
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     x = 0
     y = 0
-
     for contour in contours:
 
         if cv2.contourArea(contour) < 500:
@@ -91,8 +90,6 @@ class robot_localize(Node):
         self.map_origin = [0.0, 0.0, 0.0]  # Map origin [x, y, theta]
         self.map_width = 480  # Width in pixels
         self.map_height = 640  # Height in pixels
-        self.orientation = 0
-
 
         self.broadcaster = TransformBroadcaster(self)
         self.ballState = self.create_publisher(Bool,"/ballState",10)
@@ -110,19 +107,17 @@ class robot_localize(Node):
         odom_tf.header.frame_id = "odom"
         odom_tf.child_frame_id = "base_footprint"
         odom_tf.header.stamp = self.get_clock().now().to_msg()
-        self.orientation +=  int(90 - o_z)
-        self.orientation %= 360
-        print("ori ",self.orientation)
+
 
         print(cord)
         odom_tf.transform.translation.x = x/370
         odom_tf.transform.translation.y = y/370
-        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, math.radians(self.orientation))
+        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, math.pi/2 + math.radians(o_z))
         self.tf_broad.sendTransform(odom_tf)
         occupancy_grid = self.create_occupancy_grid(image)
         self.map_publisher.publish(occupancy_grid)
 
-        cv2.imshow('Received Image', frame)
+        cv2.imshow('Received Image', image)
         # cv2.imshow("Map", occupancy_grid.data)
         cv2.waitKey(1)  
 
