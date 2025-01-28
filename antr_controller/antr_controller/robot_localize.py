@@ -67,7 +67,7 @@ def detect_green_box(image):
         print(f"Yellow box position: x={int(x)}, y={int(y)}")
     
 
-    return (image,x,y,float(rect[2]))
+    return (image,x,y,180 + float(rect[2]))
 
 class robot_localize(Node):
     def __init__(self):
@@ -110,9 +110,9 @@ class robot_localize(Node):
 
 
         print(cord)
-        odom_tf.transform.translation.x = x/370
+        odom_tf.transform.translation.x = x/370 -self.map_width*self.map_resolution
         odom_tf.transform.translation.y = y/370
-        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, math.pi/2 + math.radians(o_z))
+        odom_tf.transform.rotation.x,odom_tf.transform.rotation.y,odom_tf.transform.rotation.z,odom_tf.transform.rotation.w = quaternion_from_euler(0, 0, math.radians(o_z))
         self.tf_broad.sendTransform(odom_tf)
         occupancy_grid = self.create_occupancy_grid(image)
         self.map_publisher.publish(occupancy_grid)
@@ -152,7 +152,7 @@ class robot_localize(Node):
         occupancy_grid.info.resolution = self.map_resolution
         occupancy_grid.info.width = self.map_width
         occupancy_grid.info.height = self.map_height
-        occupancy_grid.info.origin.position.x = self.map_origin[0]
+        occupancy_grid.info.origin.position.x = self.map_origin[0]-self.map_width*self.map_resolution
         occupancy_grid.info.origin.position.y = self.map_origin[1]
         occupancy_grid.info.origin.position.z = 0.0
         occupancy_grid.info.origin.orientation.x = 0.0
